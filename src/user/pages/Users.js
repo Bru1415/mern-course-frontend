@@ -1,7 +1,19 @@
 import React from "react";
-
+import UsersList from "../components/UsersList";
+import reactImage from "../../logo.svg";
 const Users = () => {
-  return <h2>Users works</h2>;
+  const Dummy_Items = [
+    {
+      id: "u2",
+      name: "laura",
+      image:
+        "https://images.pexels.com/photos/839011/pexels-photo-839011.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
+      numPlaces: 1,
+    },
+    { id: "u1", name: "paul", image: reactImage, numPlaces: 6 },
+    { id: "4", name: "jana", image: reactImage, numPlaces: 4 },
+  ];
+  return <UsersList items={Dummy_Items} />;
 };
 
 export default Users;
