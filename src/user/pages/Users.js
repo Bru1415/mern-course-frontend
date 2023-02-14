@@ -1,19 +1,34 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import UsersList from "../components/UsersList";
-import reactImage from "../../logo.svg";
+import ErrorModal from "../../shared/components/UIElements/ErrorModal";
+import LoadingSpinner from "../../shared/components/UIElements/LoadingSpinner";
+import { useHttpClient } from "../../shared/hooks/http-hook";
+// import reactImage from "../../logo.svg";
+
 const Users = () => {
-  const Dummy_Items = [
-    {
-      id: "u2",
-      name: "laura",
-      image:
-        "https://images.pexels.com/photos/839011/pexels-photo-839011.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
-      numPlaces: 1,
-    },
-    { id: "u1", name: "paul", image: reactImage, numPlaces: 6 },
-    { id: "4", name: "jana", image: reactImage, numPlaces: 4 },
-  ];
-  return <UsersList items={Dummy_Items} />;
+  const [loadedUsers, setLoadedUsers] = useState();
+  const { error, sendRequest, clearError, isLoading } = useHttpClient();
+  useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        const responseData = await sendRequest(process.env.REACT_APP_BACKEND_URL + "/users");
+        setLoadedUsers(responseData.users);
+      } catch (error) {}
+    };
+    fetchUsers();
+  }, [sendRequest]);
+
+  return (
+    <React.Fragment>
+      <ErrorModal error={error} onClear={clearError} />
+      {isLoading && (
+        <div className="center">
+          <LoadingSpinner />
+        </div>
+      )}
+      {!isLoading && loadedUsers && <UsersList items={loadedUsers} />}
+    </React.Fragment>
+  );
 };
 
 export default Users;
